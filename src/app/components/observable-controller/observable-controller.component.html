@@ -1,0 +1,6 @@
+<div style="display: flex; gap: 10px; align-items: center; padding-bottom: 10px;">
+    <input type="text" [(ngModel)]="inputValue" (input)="onInputValueChange($event)" placeholder="Enter value" style="padding: 5px; flex: 1;">
+    <input type="number" [value]="delay" (input)="onDelayChange($event)" style="width: 70px;">
+    <button (click)="onAddEvent()" style="padding: 5px 10px; cursor: pointer;">Add Event</button>
+    <button (click)="onErrorClick()" style="padding: 5px 10px; cursor: pointer;" [ngClass]="{'active': isError}">Error Event</button>
+</div>

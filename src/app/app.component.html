@@ -1,0 +1,19 @@
+<div style="padding: 20px">
+    <app-observable-controller (addEvent)="addEventToObservable($event)" #observableController></app-observable-controller>
+    <h3>Dynamic Marble diagram:</h3>
+    <app-marble-diagram [observable]="dynamicObservable" [duration]="800"></app-marble-diagram>
+</div>
+
+<div style="padding: 20px">
+    <h3>Marble diagram for myObservable:</h3>
+    <app-marble-diagram [observable]="myObservable" [duration]="800"></app-marble-diagram>
+
+    <h3>Marble diagram for myErrorObservable:</h3>
+    <app-marble-diagram [observable]="myErrorObservable" [duration]="800"></app-marble-diagram>
+
+    <h3>Marble diagram for testObservable:</h3>
+    <app-marble-diagram [observable]="testObservable" [duration]="500"></app-marble-diagram>
+
+    <h3>Marble diagram for intervalObservable:</h3>
+    <app-marble-diagram [observable]="intervalObservable" [duration]="500"></app-marble-diagram>
+</div>
