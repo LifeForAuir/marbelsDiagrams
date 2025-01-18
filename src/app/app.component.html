@@ -1,6 +1,7 @@
 <div style="padding: 20px">
-    <app-observable-controller (addEvent)="addEventToObservable($event)" #observableController></app-observable-controller>
+    <app-observable-controller (addEvent)="addEventToObservable($event)" (changeOperator)="changeOperator($event)" #observableController></app-observable-controller>
     <h3>Dynamic Marble diagram:</h3>
+    <div>Current operator: <b>{{pipeDescription}}</b></div>
     <app-marble-diagram [observable]="dynamicObservable" [duration]="800"></app-marble-diagram>
 </div>
 

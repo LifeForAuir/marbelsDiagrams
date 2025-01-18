@@ -11,9 +11,14 @@ import { FormsModule } from '@angular/forms';
 })
 export class ObservableControllerComponent {
     @Output() addEvent = new EventEmitter<{value: string, delay: number, isError: boolean}>();
+    @Output() changeOperator = new EventEmitter<string>();
+
     inputValue: string = '';
     delay: number = 100;
     isError: boolean = false;
+    selectedOperator: string = 'none';
+    availableOperators: string[] = ['none', 'map', 'filter', 'delay'];
+
 
     onAddEvent() {
         this.addEvent.emit({value: this.inputValue, delay: this.delay, isError: this.isError});
@@ -26,5 +31,9 @@ export class ObservableControllerComponent {
     }
     onErrorClick(){
         this.isError = !this.isError;
+    }
+    onOperatorChange(event: any){
+        this.selectedOperator = event.target.value;
+        this.changeOperator.emit(event.target.value)
     }
 }

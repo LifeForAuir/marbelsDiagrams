@@ -1,6 +1,6 @@
 import {Component, OnDestroy} from '@angular/core';
 import {MarbleDiagramComponent} from "./components/marble-diagram/marble-diagram.component";
-import {Observable, Subscriber, Subscription} from 'rxjs';
+import {Observable, Subscriber, Subscription, delay, filter, map} from 'rxjs';
 import {ObservableControllerComponent} from "./components/observable-controller/observable-controller.component";
 
 interface EventRecord {
@@ -19,6 +19,7 @@ interface EventRecord {
 export class AppComponent {
     dynamicObservable!: Observable<string>;
     eventRecords: EventRecord[] = [];
+    pipeDescription: string = 'none';
 
 
     constructor() {
@@ -26,28 +27,56 @@ export class AppComponent {
     }
 
     createObservable() {
-        this.eventRecords.push({value: 'initial', delay: 0, isError: false}) // Добавляем начальное значение
+        this.eventRecords.push({value: 'initial', delay: 0, isError: false})
         this.dynamicObservable = new Observable<string>((subscriber: Subscriber<string>) => {
             subscriber.next('initial');
         })
     }
+    changeOperator(operator: string){
+        if(operator === 'map'){
+            this.pipeDescription = "map(value => value + ' mapped')"
+        }
+        if(operator === 'filter'){
+            this.pipeDescription = "filter(value => !value.includes('a'))"
+        }
+        if(operator === 'delay'){
+            this.pipeDescription = "delay(500)"
+        }
+        if(operator === 'none') {
+            this.pipeDescription = 'none'
+        }
+    }
 
     addEventToObservable(event: {value: string, delay: number, isError: boolean}) {
-        this.eventRecords.push(event)
+        this.eventRecords.push(event);
+
         this.dynamicObservable = new Observable<string>((subscriber) => {
-            let next = (value: string) => subscriber.next(value)
-            let error = (err: any) => subscriber.error(err)
-
-            this.eventRecords.forEach( event => {
-                setTimeout(() => {
-                    if(event.isError){
-                        error('My Error');
-                    } else {
-                        next(event.value)
-                    }
-
-                }, event.delay)
+            let next = (value: string) => subscriber.next(value);
+            let error = (err: any) => subscriber.error(err);
+            let observable = new Observable<string>((sub) => {
+                this.eventRecords.forEach( event => {
+                    setTimeout(() => {
+                        if(event.isError){
+                            error('My Error');
+                        } else {
+                            next(event.value)
+                        }
+                    }, event.delay);
+                });
             });
+
+            if(this.pipeDescription === "map(value => value + ' mapped')"){
+                observable = observable.pipe(map(value => value + ' mapped'))
+            }
+            if(this.pipeDescription === "filter(value => !value.includes('a'))"){
+                observable = observable.pipe(filter(value => !value.includes('a')))
+            }
+            if(this.pipeDescription === "delay(500)"){
+                observable = observable.pipe(delay(500))
+            }
+
+            observable.subscribe(subscriber);
+
         });
     }
 
@@ -82,3 +111,4 @@ export class AppComponent {
         }, 100)
     });
 }
+
